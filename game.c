@@ -82,21 +82,87 @@ void choose_level(Game *game){
 
 /**** LAB 1 - functions to program (start here) ****/
 void print_state(State s){
-    // ToDo
+//This function prints the game state which is the grid for the level selected by the player
+    for (int i = 0; i <s.rows; ++i) { //goes through every element stored in variable row
+        for (int j = 0; j<s.columns; ++j) { //goes through every element stored in variable column
+            printf("%c",s.grid[i][j]); //prints the character at position [i][j]
+            }
+        printf("\n"); //moves to the next line after each row
+    }
 }
 
 void print_game(Game game){
-    // ToDo
+    printf("[INFO] Level #%d current score:%d\n",game.level,game.score); //prints current "level" and "score" stored in data structure "game"
+    print_state(game.state); //prints the current grid
 }
 
 
-bool is_terminal(State s){
-    // ToDo
-    return false;
+bool is_terminal(State s) {
+    // Mirem si queda algun punt de destí ('G') sense caixa [cite: 118]
+    for (int i = 0; i < s.rows; i++) {
+        for (int j = 0; j < s.columns; j++) {
+            // Si hi ha un 'G' (destí buit) o 'Y' (agent sobre destí), no hem acabat 
+            if (s.grid[i][j] == 'G' || s.grid[i][j] == 'Y') {
+                return false;
+            }
+        }
+    }
+    return true; 
 }
 
-State move(State s, Option o){
-    // ToDo
+State move(State s, Option o) {
+    int r, c;
+    // Busquem on està l'agent ara mateix [cite: 60, 66]
+    for (int i = 0; i < s.rows; i++) {
+        for (int j = 0; j < s.columns; j++) {
+            if (s.grid[i][j] == 'A' || s.grid[i][j] == 'Y') {
+                r = i; c = j;
+            }
+        }
+    }
+
+    // Calculem la casella on volem anar (nr, nc) 
+    int nr = r, nc = c;
+    if (o == MOVE_UP)    nr = r - 1;
+    else if (o == MOVE_DOWN)  nr = r + 1;
+    else if (o == MOVE_LEFT)  nc = c - 1;
+    else if (o == MOVE_RIGHT) nc = c + 1;
+
+    // Què hi ha on volem anar? 
+    char desti = s.grid[nr][nc];
+
+    // Cas senzill: Casella buida o objectiu buit 
+    if (desti == '.' || desti == 'G') {
+        // L'agent marxa: si estava sobre un objectiu, hi deixa la 'G' 
+        if (s.grid[r][c] == 'Y') s.grid[r][c] = 'G';
+        else s.grid[r][c] = '.';
+        
+        // L'agent arriba: si el destí era 'G', es converteix en 'Y' 
+        if (desti == 'G') s.grid[nr][nc] = 'Y';
+        else s.grid[nr][nc] = 'A';
+    } 
+    // Cas caixa: Volem empènyer 
+    else if (desti == 'B' || desti == 'X') {
+        // Calculem la casella que hi ha darrere la caixa (nnr, nnc) 
+        int nnr = nr + (nr - r);
+        int nnc = nc + (nc - c);
+        char darrere = s.grid[nnr][nnc];
+
+        // Si darrere la caixa hi ha lloc, empenyem 
+        if (darrere == '.' || darrere == 'G') {
+            // Movem la caixa al seu nou lloc 
+            if (darrere == 'G') s.grid[nnr][nnc] = 'X';
+            else s.grid[nnr][nnc] = 'B';
+
+            // L'agent es mou a on estava la caixa
+            if (desti == 'X') s.grid[nr][nc] = 'Y';
+            else s.grid[nr][nc] = 'A';
+
+            // L'agent marxa del seu lloc original 
+            if (s.grid[r][c] == 'Y') s.grid[r][c] = 'G';
+            else s.grid[r][c] = '.';
+        }
+    }
     return s;
 }
 

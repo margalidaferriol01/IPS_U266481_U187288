@@ -2,18 +2,34 @@
 
 /**** LAB 1 - functions to program (start here) ****/
 void restart_session_game(Session *session){
-    // ToDo
+//we use the function init_game to reset the current game to default values
+//"Session" and "Game" are data structures "session" is a pointer that refers to a Session where "current_game" is stored
+//"&session -> current game" gets the adress of current_game so that init_game can modify it
+    init_game(&session->current_game);
 }
 
 void init_session(Session *session){
-    // ToDo
+    for (int level=0; level<=MAX_LEVELS;++level){
+        session -> best_score[level]=0;
+    }
+    restart_session_game(session);
 }
 
-void print_session(Session *session){
-    // ToDo
+void print_session(Session *session) {
+    // Imprimim el millor resultat i cridem a print_game [cite: 125]
+    int lvl = session->current_game.level;
+    printf("[INFO] Level #%d best score: %d\n", lvl, session->best_score[lvl]);
+    print_game(session->current_game);
 }
 
-void new_game_score(Session *session){
-    // ToDo
+void new_game_score(Session *session) {
+    int lvl = session->current_game.level;
+    int actual = session->current_game.score;
+    int millor = session->best_score[lvl];
+
+    // Si és la primera vegada (0) o hem millorat el rècord [cite: 126]
+    if (millor == 0 || actual < millor) {
+        session->best_score[lvl] = actual;
+    }
 }
 /**** LAB 1 - functions to program (end here) ****/
