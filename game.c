@@ -82,18 +82,20 @@ void choose_level(Game *game){
 
 /**** LAB 1 - functions to program (start here) ****/
 void print_state(State s){
-//This function prints the game state which is the grid for the level selected by the player
-    for (int i = 0; i <s.rows; ++i) { //goes through every element stored in variable row
-        for (int j = 0; j<s.columns; ++j) { //goes through every element stored in variable column
-            printf("%c",s.grid[i][j]); //prints the character at position [i][j]
+//Imprimeix l'estat del joc, el "grid" corresponent segons el nivell seleccionat pel jugador
+    for (int i = 0; i <s.rows; ++i) { //Recorre totes les files
+        for (int j = 0; j<s.columns; ++j) { //Recorre totes les columnes
+            printf("%c",s.grid[i][j]); //Imprimeix el caràcter guardat a la posició [i][j]
             }
-        printf("\n"); //moves to the next line after each row
+        printf("\n"); //Passa a la següent línia al final de cada fila
     }
 }
 
 void print_game(Game game){
-    printf("[INFO] Level #%d current score:%d\n",game.level,game.score); //prints current "level" and "score" stored in data structure "game"
-    print_state(game.state); //prints the current grid
+    //1. Imprimeix el "level" i "score" guardats a l'estructura de dades "game"
+    printf("[INFO] Level #%d current score:%d\n",game.level,game.score); 
+    //2. Imprimeix la taula actual
+    print_state(game.state); 
 }
 
 bool is_terminal(State s) {
