@@ -5,8 +5,8 @@
 #include "utils.h"
 
 /// LAB 1 - macros
-#define MAX_ROWS 9
-#define MAX_COLUMNS 9
+#define MAX_ROWS 9 // Hem canviat de 8 a 9 pel motiu del correu de la Raquel
+#define MAX_COLUMNS 9 // Hem canviat de 8 a 9  pel motiu del correu de la Raquel
 
 /// LAB 1 - data structures
 typedef struct{
