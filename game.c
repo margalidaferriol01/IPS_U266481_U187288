@@ -96,23 +96,22 @@ void print_game(Game game){
     print_state(game.state); //prints the current grid
 }
 
-
 bool is_terminal(State s) {
-    // Mirem si queda algun punt de destí ('G') sense caixa [cite: 118]
+    // El joc s'acaba quan no queden objectius ('G') ni l'agent sobre un objectiu ('Y')
     for (int i = 0; i < s.rows; i++) {
         for (int j = 0; j < s.columns; j++) {
-            // Si hi ha un 'G' (destí buit) o 'Y' (agent sobre destí), no hem acabat 
             if (s.grid[i][j] == 'G' || s.grid[i][j] == 'Y') {
-                return false;
+                return false; // Encara falta col·locar alguna caixa
             }
         }
     }
-    return true; 
+    return true; // Totes les caixes estan al seu lloc
 }
-
 State move(State s, Option o) {
     int r, c;
-    // Busquem on està l'agent ara mateix [cite: 60, 66]
+    int dr = 0, dc = 0; // Variables per la direcció: dr (fila), dc (columna)
+
+    // 1. Busquem la posició actual de l'agent ('A' o 'Y')
     for (int i = 0; i < s.rows; i++) {
         for (int j = 0; j < s.columns; j++) {
             if (s.grid[i][j] == 'A' || s.grid[i][j] == 'Y') {
@@ -121,50 +120,78 @@ State move(State s, Option o) {
         }
     }
 
-    // Calculem la casella on volem anar (nr, nc) 
-    int nr = r, nc = c;
-    if (o == MOVE_UP)    nr = r - 1;
-    else if (o == MOVE_DOWN)  nr = r + 1;
-    else if (o == MOVE_LEFT)  nc = c - 1;
-    else if (o == MOVE_RIGHT) nc = c + 1;
+    // 2. Determinem el moviment segons l'opció triada (Up, Down, Left, Right)
+    if (o == MOVE_UP){
+        dr = -1;
+    }         
+    else if (o == MOVE_DOWN){ 
+        dr = 1;
+    } else if (o == MOVE_LEFT){
+        dc = -1;
+    } else if (o == MOVE_RIGHT) {
+        dc = 1;
+    }
 
-    // Què hi ha on volem anar? 
+    // 3. Calculem on volem anar (next) i on aniria una caixa si l'empenyem (box_next)
+    int nr = r + dr;
+    int nc = c + dc;
+    int nnr = nr + dr;
+    int nnc = nc + dc;
+
     char desti = s.grid[nr][nc];
 
-    // Cas senzill: Casella buida o objectiu buit 
+    // 4. Lògica de col·lisions i moviments
+    if (desti == '#') {
+        return s; // Si és una paret, no fem res
+    }
+
+    // Cas A: La casella de destí és buida o un objectiu
     if (desti == '.' || desti == 'G') {
-        // L'agent marxa: si estava sobre un objectiu, hi deixa la 'G' 
-        if (s.grid[r][c] == 'Y') s.grid[r][c] = 'G';
-        else s.grid[r][c] = '.';
-        
-        // L'agent arriba: si el destí era 'G', es converteix en 'Y' 
-        if (desti == 'G') s.grid[nr][nc] = 'Y';
-        else s.grid[nr][nc] = 'A';
-    } 
-    // Cas caixa: Volem empènyer 
+    // 1. L'AGENT MARXA de la casella on estava (r, c)
+    if (s.grid[r][c] == 'Y') {
+        s.grid[r][c] = 'G'; // Si l'agent estava sobre un objectiu, hi deixa el punt de l'objectiu [cite: 66]
+    } else {
+        s.grid[r][c] = '.'; // Si no, deixa la casella buida [cite: 60, 63]
+    }
+
+    // 2. L'AGENT ARRIBA a la nova casella (nr, nc)
+    if (desti == 'G') {
+        s.grid[nr][nc] = 'Y'; // Si on va és un objectiu, l'agent es dibuixa com 'Y' [cite: 66]
+    } else {
+        s.grid[nr][nc] = 'A'; // Si és un lloc buit, es dibuixa com 'A' [cite: 60]
+    }
+}
+    // Cas B: Hi ha una caixa i mirem si podem empènyer-la
     else if (desti == 'B' || desti == 'X') {
-        // Calculem la casella que hi ha darrere la caixa (nnr, nnc) 
-        int nnr = nr + (nr - r);
-        int nnc = nc + (nc - c);
-        char darrere = s.grid[nnr][nnc];
+    char darrere = s.grid[nnr][nnc]; // Mirem què hi ha darrere la caixa
 
-        // Si darrere la caixa hi ha lloc, empenyem 
-        if (darrere == '.' || darrere == 'G') {
-            // Movem la caixa al seu nou lloc 
-            if (darrere == 'G') s.grid[nnr][nnc] = 'X';
-            else s.grid[nnr][nnc] = 'B';
+    if (darrere == '.' || darrere == 'G') {
+        // 1. MOVEM LA CAIXA al lloc de darrere (nnr, nnc)
+        if (darrere == 'G') {
+            s.grid[nnr][nnc] = 'X'; // Caixa sobre objectiu [cite: 65]
+        } else {
+            s.grid[nnr][nnc] = 'B'; // Caixa sobre terra [cite: 61]
+        }
 
-            // L'agent es mou a on estava la caixa
-            if (desti == 'X') s.grid[nr][nc] = 'Y';
-            else s.grid[nr][nc] = 'A';
+        // 2. L'AGENT OCUPA EL LLOC DE LA CAIXA (nr, nc)
+        if (desti == 'X') {
+            s.grid[nr][nc] = 'Y'; // L'agent ara trepitja l'objectiu on hi havia la caixa [cite: 66]
+        } else {
+            s.grid[nr][nc] = 'A'; // L'agent ara trepitja terra [cite: 60]
+        }
 
-            // L'agent marxa del seu lloc original 
-            if (s.grid[r][c] == 'Y') s.grid[r][c] = 'G';
-            else s.grid[r][c] = '.';
+        // 3. L'AGENT DEIXA EL SEU LLOC ORIGINAL (r, c)
+        if (s.grid[r][c] == 'Y') {
+            s.grid[r][c] = 'G';
+        } else {
+            s.grid[r][c] = '.';
         }
     }
+}
+
     return s;
 }
+
 
 /**** LAB 1 - functions to program (end here) ****/
 
