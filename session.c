@@ -16,18 +16,18 @@ void init_session(Session *session){
 }
 
 void print_session(Session *session) {
-    // Imprimim el millor resultat i cridem a print_game [cite: 125]
-    int lvl = session->current_game.level;
-    printf("[INFO] Level #%d best score: %d\n", lvl, session->best_score[lvl]);
-    print_game(session->current_game);
+    // Imprimim el millor resultat i cridem a print_game per mostrar l'estat actual del joc
+    int lvl = session->current_game.level;  // Obtenim el nivell actual del joc
+    printf("[INFO] Level #%d best score: %d\n", lvl, session->best_score[lvl]); // Imprimim el millor resultat per al nivell actual
+    print_game(session->current_game); // Cridem a print_game per mostrar l'estat actual del joc
 }
 
 void new_game_score(Session *session) {
-    int lvl = session->current_game.level;
-    int actual = session->current_game.score;
-    int millor = session->best_score[lvl];
+    int lvl = session->current_game.level; // Obtenim el nivell actual del joc
+    int actual = session->current_game.score; // Obtenim el resultat actual del joc
+    int millor = session->best_score[lvl]; // Obtenim el millor resultat guardat per al nivell actual
 
-    // Si és la primera vegada (0) o hem millorat el rècord [cite: 126]
+    // Si és la primera vegada (0) o hem millorat el rècord, actualitzem el millor resultat
     if (millor == 0 || actual < millor) {
         session->best_score[lvl] = actual;
     }

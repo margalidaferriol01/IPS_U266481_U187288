@@ -109,7 +109,7 @@ bool is_terminal(State s) {
 }
 State move(State s, Option o) {
     int r, c;
-    int dr = 0, dc = 0; // Variables per la direcció: dr (fila), dc (columna)
+    int dr = 0, dc = 0; // Variables per la direcció: drow (fila), dcolumn (columna)
 
     // 1. Busquem la posició actual de l'agent ('A' o 'Y')
     for (int i = 0; i < s.rows; i++) {
@@ -126,9 +126,11 @@ State move(State s, Option o) {
     }         
     else if (o == MOVE_DOWN){ 
         dr = 1;
-    } else if (o == MOVE_LEFT){
+    } 
+    else if (o == MOVE_LEFT){
         dc = -1;
-    } else if (o == MOVE_RIGHT) {
+    } 
+    else if (o == MOVE_RIGHT) {
         dc = 1;
     }
 
@@ -142,23 +144,23 @@ State move(State s, Option o) {
 
     // 4. Lògica de col·lisions i moviments
     if (desti == '#') {
-        return s; // Si és una paret, no fem res
+        return s; // Si és una paret, no feim res
     }
 
     // Cas A: La casella de destí és buida o un objectiu
     if (desti == '.' || desti == 'G') {
-    // 1. L'AGENT MARXA de la casella on estava (r, c)
+    // 1. L'agent marxa de la casella on estava (r, c)
     if (s.grid[r][c] == 'Y') {
-        s.grid[r][c] = 'G'; // Si l'agent estava sobre un objectiu, hi deixa el punt de l'objectiu [cite: 66]
+        s.grid[r][c] = 'G'; // Si l'agent estava sobre un objectiu, hi deixa el punt de l'objectiu 
     } else {
-        s.grid[r][c] = '.'; // Si no, deixa la casella buida [cite: 60, 63]
+        s.grid[r][c] = '.'; // Si no, deixa la casella buida
     }
 
-    // 2. L'AGENT ARRIBA a la nova casella (nr, nc)
+    // 2. L'agent arriba a la nova casella (nr, nc)
     if (desti == 'G') {
-        s.grid[nr][nc] = 'Y'; // Si on va és un objectiu, l'agent es dibuixa com 'Y' [cite: 66]
+        s.grid[nr][nc] = 'Y'; // Si on va és un objectiu, l'agent es dibuixa com 'Y' 
     } else {
-        s.grid[nr][nc] = 'A'; // Si és un lloc buit, es dibuixa com 'A' [cite: 60]
+        s.grid[nr][nc] = 'A'; // Si és un lloc buit, es dibuixa com 'A' 
     }
 }
     // Cas B: Hi ha una caixa i mirem si podem empènyer-la
@@ -166,21 +168,21 @@ State move(State s, Option o) {
     char darrere = s.grid[nnr][nnc]; // Mirem què hi ha darrere la caixa
 
     if (darrere == '.' || darrere == 'G') {
-        // 1. MOVEM LA CAIXA al lloc de darrere (nnr, nnc)
+        // 1. Movem la caixa al lloc de darrere (nnr, nnc)
         if (darrere == 'G') {
-            s.grid[nnr][nnc] = 'X'; // Caixa sobre objectiu [cite: 65]
+            s.grid[nnr][nnc] = 'X'; // Caixa sobre objectiu
         } else {
-            s.grid[nnr][nnc] = 'B'; // Caixa sobre terra [cite: 61]
+            s.grid[nnr][nnc] = 'B'; // Caixa sobre terra 
         }
 
-        // 2. L'AGENT OCUPA EL LLOC DE LA CAIXA (nr, nc)
+        // 2. L'agent ocupa el lloc de la caixa (nr, nc)
         if (desti == 'X') {
-            s.grid[nr][nc] = 'Y'; // L'agent ara trepitja l'objectiu on hi havia la caixa [cite: 66]
+            s.grid[nr][nc] = 'Y'; // L'agent ara trepitja l'objectiu on hi havia la caixa 
         } else {
-            s.grid[nr][nc] = 'A'; // L'agent ara trepitja terra [cite: 60]
+            s.grid[nr][nc] = 'A'; // L'agent ara trepitja terra on hi havia la caixa 
         }
 
-        // 3. L'AGENT DEIXA EL SEU LLOC ORIGINAL (r, c)
+        // 3. L'agent deixa el seu lloc original (r, c)
         if (s.grid[r][c] == 'Y') {
             s.grid[r][c] = 'G';
         } else {
@@ -189,7 +191,7 @@ State move(State s, Option o) {
     }
 }
 
-    return s;
+    return s; // Retornem l'estat actualitzat després del moviment (o intent de moviment)
 }
 
 
