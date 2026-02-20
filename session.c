@@ -10,12 +10,15 @@ void restart_session_game(Session *session){
     init_game(&session->current_game);
 }
 
-void init_session(Session *session){
-//Torna a 0 el "best_score" i reinicia el joc actual amb restart_session_game
-    for (int level=0; level<=MAX_LEVELS;++level){ //Recorre els nivells, de 0 a max fixat a les macros
-        session -> best_score[level]=0;//Deixa la "best score" de cada nivell a 0, així reinicies el marcador
+void init_session(Session *s) {
+    for (int i = 0; i <= MAX_LEVELS; i++) {
+        s->best_score[i] = 0;
     }
-    restart_session_game(session); //Crida la funció restart_session_game
+    s->current_game.state.grid = NULL; 
+    s->current_game.state.rows = 0;
+    s->current_game.state.columns = 0;
+    s->current_game.score = 0;
+    s->current_game.level = 0;
 }
 
 void print_session(Session *session) {

@@ -117,7 +117,7 @@ void load_game(Session *session) {
     // Cridem a make_grid (funció de game.c) que fa el malloc
     session->current_game.state.rows = r;
     session->current_game.state.columns = c;
-    session->current_game.state.grid = make_grid(r, c);
+    session->current_game.state.grid = make_grid(r, c+1); // +1 per al caràcter de final de cadena '\0' en cada fila
 
     // Pas 4: Llegim la graella caràcter a caràcter o línia a línia
     for (int i = 0; i < r; i++) {

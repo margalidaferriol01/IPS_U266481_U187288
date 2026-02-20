@@ -1,8 +1,10 @@
 Score: 3
-Level: 1
+Level: 2
 State:
-rows: 3
+rows: 5
 columns: 8
 ########
-#....AX#
+#....###
+#.B#.#.#
+#..B.GY#
 ########

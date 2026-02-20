@@ -220,17 +220,21 @@ State move(State s, Option o) {
 
 
 /**** LAB 2 - functions to program (start here) ****/
-void free_state(State *s){ //s es el punter a State,  amb aquet funcio podem modificar estat original.
-    if(s->grid != NULL){// Alliberem la memoria si No es null
-        for (int i=0; i < s->rows; i++){ // amb bucle for, recorrem les files.
-            free(s->grid[i]);//alliberem fila i 
+void free_state(State *s) {
+    // Verifiquem que el punter a la graella no sigui NULL i tingui sentit
+    if (s != NULL && s->grid != NULL) {
+        for (int i = 0; i < s->rows; i++) {
+            // Només alliberem la fila si no és NULL
+            if (s->grid[i] != NULL) {
+                free(s->grid[i]);
+                s->grid[i] = NULL; // Netegem cada fila
+            }
         }
-        free(s->grid);// alliber, l'array principal de punters
-        s->grid=NULL;// posem punter a null per evitar els punters penjats
+        free(s->grid);
+        s->grid = NULL; // Marquem la graella com a buida
     }
-    s->rows=0; // reiniciar fila
-    s->columns =0; // reiniciar columna
-    
+    s->rows = 0;
+    s->columns = 0;
 }
 
 void free_game(Game *g){
@@ -239,12 +243,15 @@ void free_game(Game *g){
     free_state(&g->state); // alliberar el grd cridat la funcio anteriro 
 }
 
-char** make_grid(int rows, int columns){
-    char **grid=malloc(rows*sizeof(char*));// entrem al punter de la fila i revisar.
-    for(int i = 0;i<rows;i++){ //amb for bucle, rerrem cada fila.
-        grid[i]=malloc (columns * sizeof (char));// a cada fila revisa memoria de columna
+char** make_grid(int rows, int columns) {
+    char **grid = (char**)malloc(rows * sizeof(char*));
+    if (grid == NULL) return NULL; // Seguretat si la memòria falla
+
+    for (int i = 0; i < rows; i++) {
+        grid[i] = (char*)malloc(columns * sizeof(char));
+        if (grid[i] == NULL) return NULL; 
     }
-    return grid;// retorna amb la matriu creada
+    return grid;
 }
 /**** LAB 2 - functions to program (end here) ****/
 
