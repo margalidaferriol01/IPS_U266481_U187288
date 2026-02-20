@@ -6,6 +6,7 @@ void restart_session_game(Session *session){
     //"session" és un punter a una Session (structure) i current_game és el Game (structure) que hi ha dins
     //Passem l'adreça de "session -> current game" perquè init_game el modifiqui
     init_game(&session->current_game);
+    // ToDo - Lab 1 & refactor in Lab 2
 }
 
 void init_session(Session *session){
@@ -14,6 +15,7 @@ void init_session(Session *session){
         session -> best_score[level]=0; //Deixa la "best score" de cada nivell a 0, així reinicies el marcador
     }
     restart_session_game(session); //Crida la funció restart_session_game
+    // ToDo - Lab 1 & refactor in Lab 2
 }
 
 void print_session(Session *session) {
@@ -34,3 +36,8 @@ void new_game_score(Session *session) {
     }
 }
 /**** LAB 1 - functions to program (end here) ****/
+
+// LAB 2 - functions
+void free_session(Session *s){
+	// ToDo - Lab 2
+}

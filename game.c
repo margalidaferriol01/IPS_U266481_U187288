@@ -218,7 +218,7 @@ State move(State s, Option o) {
 
 /**** LAB 1 - functions to program (end here) ****/
 
-/**** LAB 2 - functions to program (start here) ****/
+
 /**** LAB 2 - functions to program (start here) ****/
 void free_state(State *s){ //s es el punter a State,  amb aquet funcio podem modificar estat original.
     if(s->grid != NULL){// Alliberem la memoria si No es null
