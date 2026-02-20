@@ -219,18 +219,32 @@ State move(State s, Option o) {
 /**** LAB 1 - functions to program (end here) ****/
 
 /**** LAB 2 - functions to program (start here) ****/
-void free_state(State *s){
-    // ToDo - Lab 2
+/**** LAB 2 - functions to program (start here) ****/
+void free_state(State *s){ //s es el punter a State,  amb aquet funcio podem modificar estat original.
+    if(s->grid != NULL){// Alliberem la memoria si No es null
+        for (int i=0; i < s->rows; i++){ // amb bucle for, recorrem les files.
+            free(s->grid[i]);//alliberem fila i 
+        }
+        free(s->grid);// alliber, l'array principal de punters
+        s->grid=NULL;// posem punter a null per evitar els punters penjats
+    }
+    s->rows=0; // reiniciar fila
+    s->columns =0; // reiniciar columna
+    
 }
 
 void free_game(Game *g){
-    // ToDo - Lab 2
+    g->score =0;// reiniciar dades
+    g->level =0;// reiniciar el nivell
+    free_state(&g->state); // alliberar el grd cridat la funcio anteriro 
 }
 
 char** make_grid(int rows, int columns){
-    // ToDo - Lab 2
-    return NULL;
-
+    char **grid=malloc(rows*sizeof(char*));// entrem al punter de la fila i revisar.
+    for(int i = 0;i<rows;i++){ //amb for bucle, rerrem cada fila.
+        grid[i]=malloc (columns * sizeof (char));// a cada fila revisa memoria de columna
+    }
+    return grid;// retorna amb la matriu creada
 }
 /**** LAB 2 - functions to program (end here) ****/
 
