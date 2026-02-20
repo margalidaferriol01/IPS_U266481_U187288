@@ -16,15 +16,19 @@ bool is_valid_option(Option o){
 bool set_level(State *s, unsigned level){
    switch(level){
     case 1:
+        printf("[INFO]: loading level #%d\n", level);
         s->rows = 3;
         s->columns = 8;
+        s->grid = make_grid(s->rows, s->columns+1);
         strcpy(s->grid[0], "########");
         strcpy(s->grid[1], "#.A.B.G#");
         strcpy(s->grid[2], "########");
         break;
     case 2:
+        printf("[INFO]: loading level #%d\n", level);
         s->rows = 5;
         s->columns = 8;
+        s->grid = make_grid(s->rows, s->columns+1);
         strcpy(s->grid[0], "########");
         strcpy(s->grid[1], "#....###");
         strcpy(s->grid[2], "#.B#.#A#");
@@ -32,8 +36,10 @@ bool set_level(State *s, unsigned level){
         strcpy(s->grid[4], "########");
         break;
     case 3:
+        printf("[INFO]: loading level #%d\n", level);
         s->rows = 7;
         s->columns = 7;
+        s->grid = make_grid(s->rows, s->columns+1);
         strcpy(s->grid[0], "#######");
         strcpy(s->grid[1], "###G###");
         strcpy(s->grid[2], "###B###");
@@ -46,6 +52,7 @@ bool set_level(State *s, unsigned level){
         printf("[INFO]: loading level #%d\n", level);
         s->rows = 6;
         s->columns = 8;
+        s->grid = make_grid(s->rows, s->columns+1);
         strcpy(s->grid[0], "#######.");
         strcpy(s->grid[1], "#.B.AG##");
         strcpy(s->grid[2], "#.XXG..#");
@@ -64,11 +71,18 @@ bool set_level(State *s, unsigned level){
 void init_game(Game *game){
     game->score = 0;
     game->level = 0;
+    // LAB 1
+    /*
     game->state.rows = MAX_ROWS;
     game->state.columns = MAX_COLUMNS;
     for(int i=0; i<MAX_ROWS; ++i)
         for(int j=0; j<MAX_COLUMNS; ++j)
             game->state.grid[i][j] = '.';
+    */
+    // LAB 2
+    game->state.rows = 0;
+    game->state.columns = 0;
+    game->state.grid = NULL;
 }
 
 void choose_level(Game *game){
@@ -203,4 +217,20 @@ State move(State s, Option o) {
 
 
 /**** LAB 1 - functions to program (end here) ****/
+
+/**** LAB 2 - functions to program (start here) ****/
+void free_state(State *s){
+    // ToDo - Lab 2
+}
+
+void free_game(Game *g){
+    // ToDo - Lab 2
+}
+
+char** make_grid(int rows, int columns){
+    // ToDo - Lab 2
+    return NULL;
+
+}
+/**** LAB 2 - functions to program (end here) ****/
 

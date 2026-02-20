@@ -43,20 +43,20 @@ void new_game(Session *session){
 }
 
 void save_game(Session *session){
-    // ToDo in Lab 2
+    // ToDo - Lab 2
 }
 
 void load_game(Session *session){
-    // ToDo in Lab 2
+    // ToDo - Lab 2
 }
 
 void resume_game(Session *session){
-    // ToDo in Lab 2
+    // ToDo - Lab 2  	
 }
 
 void print_menu(){
     printf("[INFO] Menu options:\n");
-    printf("\t1. New game.\n");  // LAB1 - basic lab for playing the game
+    printf("\t1. New game.\n");  // LAB1 - basic lab for creating grid and moves
     printf("\t2. Save game.\n"); // LAB2 - Writing file
     printf("\t3. Load game.\n"); // LAB2 - Reading file
     printf("\t4. Resume game.\n"); // LAB2 - Continue game after reading file
@@ -90,6 +90,9 @@ void run(Session *session){
             break;
         }
     }while(option != EXIT);
+    
+    // Lab 2
+    free_session(session);
 }
 
 int main(){
