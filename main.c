@@ -43,67 +43,67 @@ void new_game(Session *session){
 }
 
 
-//Guarda la partida actual en un fitxer de text i segueix el format: Score, Level, State (rows, columns i la graella).
-
+// Guarda la partida actual en un fitxer de text i segueix el format: Score, Level, State (rows, columns i la graella).
 void save_game(Session *session) {
-    char filename[MAX_STR_LENGTH];
+    char filename[50]; // Creem un espai per guardar el nom que li posaràs al fitxer
     
-    // Demanem el nom del fitxer a l'usuari
-    printf("[INFO] Enter the filename to save: ");
-    read_filename(filename);
+    printf("Escriu el nom del fitxer per guardar la partida: ");
+    read_filename(filename); // Llegim el nom que has escrit (ex: "partida1.txt")
 
-    // Obrim el fitxer en mode "w" (write/escriptura). 
-    // Si el fitxer no existeix, es crea; si existeix, se sobreescriu.
+    // Intentem obrir el fitxer per escriure-hi ("w" de write)
     FILE *f = fopen(filename, "w");
     
-    // Comprovem si el fitxer s'ha obert correctament (punter no nul)
+    // Si per algun motiu no es pot obrir, sortim
     if (f == NULL) {
-        printf("[ERROR] Could not open file %s for writing\n", filename);
+        printf("Error: No s'ha pogut crear el fitxer.\n");
         return;
     }
 
-    // Escrivim les dades de la sessió amb fprintf (format de sortida a fitxer)
-    // Accedim a les dades usant l'operador fletxa -> perquè session és un punter
+    // Comencem a escriure les dades tal com diu l'enunciat:
+    //Fem servir fprintf, que és igual que el printf però envia el text al fitxer 'f'
     fprintf(f, "Score: %d\n", session->current_game.score);
     fprintf(f, "Level: %u\n", session->current_game.level);
     fprintf(f, "State:\n");
     fprintf(f, "rows: %d\n", session->current_game.state.rows);
     fprintf(f, "columns: %d\n", session->current_game.state.columns);
 
-    // Recorrem les files de la graella dinàmica per guardar-les
+    // Ara hem d'escriure el mapa (la graella) fila per fila
     for (int i = 0; i < session->current_game.state.rows; i++) {
-        // Escrivim cada fila com una cadena de caràcters seguida d'un salt de línia
+        // Escrivim cada fila com una paraula completa i fem un salt de línia
         fprintf(f, "%s\n", session->current_game.state.grid[i]);
     }
 
-    // Tanquem el fitxer per alliberar el recurs del sistema
+    // Tanquem el fitxer en acabar per guardar els canvis
     fclose(f);
-    printf("[INFO] Game saved in %s\n", filename);
+    printf("Partida guardada correctament!\n");
 }
 
-/**
- * Carrega una partida des d'un fitxer.
- * Allibera la memòria actual abans de reservar l'espai necessari per al nou mapa.
- */
+// Carrega una partida des d'un fitxer i allibera la memòria actual abans de reservar l'espai necessari per al nou mapa.
 void load_game(Session *session) {
-    char filename[MAX_STR_LENGTH];
+    // Definim una cadena de caràcters per guardar el nom del fitxer
+    char filename[50]; 
     
-    printf("[INFO] Enter the filename to load: ");
-    read_filename(filename);
+    // Mostrem un missatge per pantalla demanant el nom a l'usuari
+    printf("Quin fitxer vols carregar?: "); 
+    
+    // Utilitzem la funció per llegir el text que escrigui l'usuari
+    read_filename(filename); 
 
-    // Obrim el fitxer en mode "r" (read/lectura)
-    FILE *f = fopen(filename, "r");
-    if (f == NULL) {
-        printf("[ERROR] File %s not found\n", filename);
-        return;
+    // Intentem obrir el fitxer indicat en mode lectura ("r" de read)
+    FILE *f = fopen(filename, "r"); 
+    
+    // Comprovem si el fitxer existeix; si fopen retorna NULL, és que no s'ha pogut obrir
+    if (f == NULL) { 
+        // Avisem de l'error i sortim de la funció per evitar que el programa peti
+        printf("Error: No s'ha trobat el fitxer.\n"); 
+        return; 
     }
 
-    // Pas 1: Molt important! Alliberem la memòria de la partida actual 
-    // per evitar "memory leaks" abans de carregar la nova.
+    // Abans de carregar res, "netegem" la memòria de la partida d'abans
+    // Així evitem que el programa s' o es quedi sense espai si carreguem un mapa més gran que l'anterior
     free_game(&session->current_game);
 
-    // Pas 2: Llegim les dades estructurades amb fscanf
-    // El format dins de " " ha de coincidir exactament amb el del fitxer
+    // Llegim les dades del fitxer fent servir fscanf. Aquest funciona igual que el scanf però llegeix des del fitxer 'f' en lloc de des de la consola.
     int r, c;
     fscanf(f, "Score: %d\n", &session->current_game.score);
     fscanf(f, "Level: %u\n", &session->current_game.level);
@@ -111,39 +111,37 @@ void load_game(Session *session) {
     fscanf(f, "rows: %d\n", &r);
     fscanf(f, "columns: %d\n", &c);
 
-    // Pas 3: Actualitzem les dimensions i reservem memòria dinàmica
-    // Cridem a make_grid (funció de game.c) que fa el malloc
+    // Ara que sabem quantes files (r) i columnes (c) té el mapa nou, demanem memòria dinàmica per a la nova graella
     session->current_game.state.rows = r;
     session->current_game.state.columns = c;
-    session->current_game.state.grid = make_grid(r, c+1); // +1 per al caràcter de final de cadena '\0' en cada fila
+    
+    // Fem servir el "make_grid" per reservar l'espai. 
+    // Posem c+1 per deixar un forat extra pel caràcter invisible que marca el final de la línia.
+    session->current_game.state.grid = make_grid(r, c + 1);
 
-    // Pas 4: Llegim la graella caràcter a caràcter o línia a línia
+    // Finalment, llegim el mapa del fitxer i el posem a la memòria
     for (int i = 0; i < r; i++) {
         fscanf(f, "%s\n", session->current_game.state.grid[i]);
     }
 
-    // Tanquem el fitxer
-    fclose(f);
-    printf("[INFO] Game loaded from %s\n", filename);
+    fclose(f); // Tanquem el fitxer
+    printf("Partida carregada! Ja pots continuar jugant.\n");
 }
 
-/**
- * Reprèn la partida que hi ha actualment en memòria.
- * No permet reprendre si el joc ja ha acabat (estat terminal).
- */
+// Reprèn la partida que hi ha actualment en memòria i no permet reprendre si el joc ja ha acabat (estat terminal).
 void resume_game(Session *session) {
-    // Verifiquem si tenim un nivell carregat (level > 0)
+    // Si el nivell és 0, vol dir que no hem carregat res encara
     if (session->current_game.level == 0) {
-        printf("[ERROR] No game in memory to resume!\n");
+        printf("Error: No hi ha cap partida per continuar.\n");
         return;
     }
 
-    // Comprovem si l'estat és terminal (totes les caixes a l'objectiu)
-    // is_terminal és una funció que rep l'estat per valor
+    // Si ja hem guanyat (totes les caixes a lloc), no deixem reprendre
     if (is_terminal(session->current_game.state)) {
-        printf("[INFO] The game is already finished. Start a new one!\n");
-    } else {
-        // Si no ha acabat, cridem al bucle principal del joc
+        printf("Aquesta partida ja ha acabat!\n");
+    } 
+    else {
+        // Si tot està bé, cridem a run_game per tornar a jugar
         run_game(session);
     }
 }
