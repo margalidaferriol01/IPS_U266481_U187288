@@ -11,14 +11,11 @@ void restart_session_game(Session *session){
 }
 
 void init_session(Session *s) {
-    for (int i = 0; i <= MAX_LEVELS; i++) {
-        s->best_score[i] = 0;
+    //Torna a 0 el "best_score" i reinicia el "current_game" amb "init_game"
+    for (int i = 0; i <= MAX_LEVELS; i++){ //Recorre els nivells, de 0 a max fixat a les macros
+        s->best_score[i] = 0; //Deixa la "best score" de cada nivell a 0, així reinicies el marcador
     }
-    s->current_game.state.grid = NULL; 
-    s->current_game.state.rows = 0;
-    s->current_game.state.columns = 0;
-    s->current_game.score = 0;
-    s->current_game.level = 0;
+    init_game(&s->current_game); //Passem l'adreça de "s->current_game" perquè init_game ho modifiqui
 }
 
 void print_session(Session *session) {
@@ -40,7 +37,7 @@ void new_game_score(Session *session) {
 }
 
 // LAB 2 - functions
-//Passem l'adreça de s->current_game perquè free_game n'alliberi   
+//Passem l'adreça de "s->current_game" perquè "free_game" alliberi la memòria dinàmica d'aquesta sessió  
 void free_session(Session *s){
 	free_game(&s->current_game);
 }
