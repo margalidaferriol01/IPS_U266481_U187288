@@ -6,8 +6,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/margaferriol/Downloads/students",
-      "program": "/Users/margaferriol/Downloads/students/build/Debug/outDebug"
+      "cwd": "/Users/margaferriol/IPS_U266481_U187288-1",
+      "program": "/Users/margaferriol/IPS_U266481_U187288-1/build/Debug/outDebug"
     }
   ]
 }
