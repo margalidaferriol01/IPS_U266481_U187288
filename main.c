@@ -43,10 +43,8 @@ void new_game(Session *session){
 }
 
 
-/**
- * Guarda la partida actual en un fitxer de text.
- * Segueix el format: Score, Level, State (rows, columns i la graella).
- */
+//Guarda la partida actual en un fitxer de text i segueix el format: Score, Level, State (rows, columns i la graella).
+
 void save_game(Session *session) {
     char filename[MAX_STR_LENGTH];
     
