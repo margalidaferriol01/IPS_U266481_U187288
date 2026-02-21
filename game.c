@@ -222,36 +222,40 @@ State move(State s, Option o) {
 /**** LAB 2 - functions to program (start here) ****/
 void free_state(State *s) {
     // Verifiquem que el punter a la graella no sigui NULL i tingui sentit
-    if (s != NULL && s->grid != NULL) {
-        for (int i = 0; i < s->rows; i++) {
+    if (s != NULL && s->grid != NULL) { // Comprova que la graella i l'estat NO sigui NULL
+        for (int i = 0; i < s->rows; i++) { // Reccorre totes les files a la graella
             // Només alliberem la fila si no és NULL
             if (s->grid[i] != NULL) {
-                free(s->grid[i]);
+                free(s->grid[i]); // Alliberem la memoria de la fila
                 s->grid[i] = NULL; // Netegem cada fila
             }
         }
-        free(s->grid);
+        free(s->grid);// Alliberem les files.
         s->grid = NULL; // Marquem la graella com a buida
     }
-    s->rows = 0;
-    s->columns = 0;
+    // Si no, reiniciem les dimensions per deixar l'estat buit
+    s->rows = 0; // Fila a 0
+    s->columns = 0; // Columna a 0
 }
 
 void free_game(Game *g){
-    g->score =0;// reiniciar dades
-    g->level =0;// reiniciar el nivell
-    free_state(&g->state); // alliberar el grd cridat la funcio anteriro 
+    g->score =0;// Reiniciar dades a 0
+    g->level =0;// Reiniciar el nivell a 0
+    free_state(&g->state); // Alliberar el grd cridat la funcio anteriro 
 }
 
 char** make_grid(int rows, int columns) {
+    // Reservem memoria per les files.
     char **grid = (char**)malloc(rows * sizeof(char*));
-    if (grid == NULL) return NULL; // Seguretat si la memòria falla
-
-    for (int i = 0; i < rows; i++) {
-        grid[i] = (char*)malloc(columns * sizeof(char));
-        if (grid[i] == NULL) return NULL; 
+    if (grid == NULL) 
+    return NULL; // Seguretat si la memòria falla
+    
+    for (int i = 0; i < rows; i++) {// Recorrem per cada fila
+        grid[i] = (char*)malloc(columns * sizeof(char)); // Resevra memoria per les columnes 
+        if (grid[i] == NULL) // Si troba NULL, es a dir si la memoria falla.
+        return NULL; //Retorna NULL
     }
-    return grid;
+    return grid;// Retornem la graella creada correcta
 }
 /**** LAB 2 - functions to program (end here) ****/
 
