@@ -247,13 +247,11 @@ void free_game(Game *g){
 char** make_grid(int rows, int columns) {
     // Reservem memoria per les files.
     char **grid = (char**)malloc(rows * sizeof(char*));
-    if (grid == NULL) 
-    return NULL; // Seguretat si la memòria falla
+    if (grid == NULL) return NULL; // Seguretat si la memòria falla
     
     for (int i = 0; i < rows; i++) {// Recorrem per cada fila
         grid[i] = (char*)malloc(columns * sizeof(char)); // Resevra memoria per les columnes 
-        if (grid[i] == NULL) // Si troba NULL, es a dir si la memoria falla.
-        return NULL; //Retorna NULL
+        if (grid[i] == NULL) return NULL; // Si troba NULL, es a dir si la memoria falla.Retorna NULL
     }
     return grid;// Retornem la graella creada correcta
 }
