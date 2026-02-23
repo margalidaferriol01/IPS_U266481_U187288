@@ -53,6 +53,14 @@ void free_game(Game *g);
 char** make_grid(int rows, int columns);
 /**** LAB 2 - functions to program (end here) ****/
 
+/**** LAB 3 - functions to program (start here) ****/
+#define MAX_DEPTH 10
+#define INVALID_MOVE -1
+Game copy(Game *g);
+int recursive_best_score(Game *g, int depth);
+int show_best_move(Game *g);
+/**** LAB 3 - functions to program (end here) ****/
+
 
 #endif
 

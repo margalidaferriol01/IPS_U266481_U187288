@@ -257,3 +257,18 @@ char** make_grid(int rows, int columns) {
 }
 /**** LAB 2 - functions to program (end here) ****/
 
+/**** LAB 3 - functions to program (start here) ****/
+Game copy(Game *g){
+	Game g_copy;
+    return g_copy;
+}
+int recursive_best_score(Game *g, int depth){
+	return 0;
+}
+
+int show_best_move(Game *g){
+	return INVALID_MOVE;
+}
+/**** LAB 3 - functions to program (end here) ****/
+
+
