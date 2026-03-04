@@ -259,31 +259,31 @@ char** make_grid(int rows, int columns) {
 
 /**** LAB 3 - functions to program (start here) ****/
 Game copy(Game *g){
-    Game c;
-    
+    Game g_copy;
     // Copiem els camps simples
-    c.score = g->score;
-    c.level = g->level;
-    c.state.rows = g->state.rows;
-    c.state.columns = g->state.columns;
+    g_copy.score = g->score;
+    g_copy.level = g->level;
+    g_copy.state.rows = g->state.rows;
+    g_copy.state.columns = g->state.columns;
 
     // Si no hi ha grid, no reservem memòria
     if (g->state.grid == NULL){
-        c.state.grid = NULL;
-        return c;
+        g_copy.state.grid = NULL;
+        return g_copy;
     }
 
     // Reservem memòria per al nou grid
-    c.state.grid = make_grid(c.state.rows, c.state.columns + 1);
+    g_copy.state.grid = make_grid(g_copy.state.rows, g_copy.state.columns + 1);
 
-    // Copiem el contingut fila per fila
-    for (int i = 0; i < c.state.rows; ++i){
-        for (int j = 0; j < c.state.columns; ++j){
-            c.state.grid[i][j] = g->state.grid[i][j];
+    // Copiem el contingut del grid
+    for (int i = 0; i < g_copy.state.rows; ++i){
+        for (int j = 0; j < g_copy.state.columns; ++j){
+            g_copy.state.grid[i][j] = g->state.grid[i][j];
         }
-        c.state.grid[i][c.state.columns] = '\0';  
+        g_copy.state.grid[i][g_copy.state.columns] = '\0';
     }
-    return c;
+
+    return g_copy;
 }
 
 /* Aquesta funció cerca la millor puntuació possible explorant moviments futurs.
