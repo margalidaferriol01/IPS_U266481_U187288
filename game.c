@@ -259,8 +259,31 @@ char** make_grid(int rows, int columns) {
 
 /**** LAB 3 - functions to program (start here) ****/
 Game copy(Game *g){
-	Game g_copy;
-    return g_copy;
+    Game c;
+    
+    // Copiem els camps simples
+    c.score = g->score;
+    c.level = g->level;
+    c.state.rows = g->state.rows;
+    c.state.columns = g->state.columns;
+
+    // Si no hi ha grid, no reservem memòria
+    if (g->state.grid == NULL){
+        c.state.grid = NULL;
+        return c;
+    }
+
+    // Reservem memòria per al nou grid
+    c.state.grid = make_grid(c.state.rows, c.state.columns + 1);
+
+    // Copiem el contingut fila per fila
+    for (int i = 0; i < c.state.rows; ++i){
+        for (int j = 0; j < c.state.columns; ++j){
+            c.state.grid[i][j] = g->state.grid[i][j];
+        }
+        c.state.grid[i][c.state.columns] = '\0';  
+    }
+    return c;
 }
 
 /* Aquesta funció cerca la millor puntuació possible explorant moviments futurs.
