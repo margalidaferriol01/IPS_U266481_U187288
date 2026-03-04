@@ -258,24 +258,28 @@ char** make_grid(int rows, int columns) {
 /**** LAB 2 - functions to program (end here) ****/
 
 /**** LAB 3 - functions to program (start here) ****/
-Game copy(Game *g){
-    Game g_copy;
-    // Copiem els camps simples
+
+Game copy(Game *g){ 
+
+    //Creem una nova variable de tipus Game que serà la nostra copia
+    Game g_copy; 
+
+    //Assignem a la copia els valors de score, level, rows i columns
     g_copy.score = g->score;
     g_copy.level = g->level;
     g_copy.state.rows = g->state.rows;
     g_copy.state.columns = g->state.columns;
 
-    // Si no hi ha grid, no reservem memòria
+    //Si el tauler és NULL, no posem res a g_copy
     if (g->state.grid == NULL){
         g_copy.state.grid = NULL;
         return g_copy;
     }
 
-    // Reservem memòria per al nou grid
+    //Cridem la funció make_grid que reserva memòria pel nou tauler
     g_copy.state.grid = make_grid(g_copy.state.rows, g_copy.state.columns + 1);
 
-    // Copiem el contingut del grid
+    //Recorrem el tauler i anem copiant el contingut a g.copy
     for (int i = 0; i < g_copy.state.rows; ++i){
         for (int j = 0; j < g_copy.state.columns; ++j){
             g_copy.state.grid[i][j] = g->state.grid[i][j];
