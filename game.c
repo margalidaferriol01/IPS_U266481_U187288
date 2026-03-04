@@ -257,3 +257,66 @@ char** make_grid(int rows, int columns) {
 }
 /**** LAB 2 - functions to program (end here) ****/
 
+/**** LAB 3 - functions to program (start here) ****/
+Game copy(Game *g){
+	Game g_copy;
+    return g_copy;
+}
+
+/* Aquesta funció cerca la millor puntuació possible explorant moviments futurs.
+   És el "cervell" que va provant coses de manera recursiva fins a un límit. */
+int recursive_best_score(Game *g, int depth) {
+    
+    // 1. CAS BASE: Ja hem guanyat?
+    // Si l'estat és terminal, tornam el score que duim acumulat.
+    if (is_terminal(g->state)) {
+        return g->score;
+    }
+
+    // 2. CAS BASE: Límit de profunditat (MAX_DEPTH)
+    // Si hem arribat al límit (que és 10), tornam 0 per indicar que no hem trobat solució en aquest camí.
+    if (depth >= MAX_DEPTH) {
+        return 0; 
+    }
+
+    // Inicialitzam min_score a 0 (que vol dir "sense solució" encara)
+    int min_score = 0;
+
+    // 3. BUCLE D'EXPLORACIÓ: Provam els 4 moviments (Up, Right, Down, Left)
+    for (int i = MOVE_UP; i <= MOVE_LEFT; i++) {
+        
+        // A. Feim la CÒPIA del joc per provar el moviment sense tocar el joc original.
+        // És vital fer-la per no espenyar la partida de veritat mentre "imaginam" moviments.
+        Game temp_game = copy(g); 
+
+        // B. Provam el moviment dins la còpia
+        State estat_abans = temp_game.state;
+        temp_game.state = move(temp_game.state, i);
+        
+        // C. Si realment ens hem mogut (gràcies a l'is_equal que compara l'estat abans i després), sumam 1 al score i seguim explorant.
+        if (!is_equal(estat_abans, temp_game.state)) {
+            temp_game.score++; // Sumam un punt per cada pas 
+
+            // D. RECURSIVITAT: Ens tornam a cridar a noltros mateixos sumant 1 a depth
+            int result = recursive_best_score(&temp_game, depth + 1);
+
+            // E. Cercam el MÍNIM: si result és > 0 i millora lo que teníem, ens ho quedam
+            if (result > 0 && (min_score == 0 || result < min_score)) {
+                min_score = result;
+            }
+        }
+
+        // F. Alliberam la memòria de la còpia, si no el programa es quedaria sense memòria després de moltes recursions.
+        free_game(&temp_game);
+    }
+
+    // Tornam la millor puntuació trobada (o 0 si no n'hi ha cap)
+    return min_score;
+}
+
+int show_best_move(Game *g){
+	return INVALID_MOVE;
+}
+/**** LAB 3 - functions to program (end here) ****/
+
+
