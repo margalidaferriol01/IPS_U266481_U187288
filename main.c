@@ -22,7 +22,21 @@ void run_game(Session *session){
                 game->score++;
                 break;
             case SHOW_BEST_MOVE:
-                // ToDo in Lab 3
+                {
+                    int move= show_best_move(&game); // Crida la funcio show_best_move
+                    // Comprovem quin moviment ha retonat la funcio 
+                    if(move == MOVE_UP) // si es cap a mun:
+                        printf("[INFO]Best move: Up /n");
+                    else if(move == MOVE_RIGHT) // si es cap a la dreta:
+                        printf("[INFO]Best move: Right /n");
+                    else if(move == MOVE_DOWN) // Si es cap abaix:
+                        printf("[INFO]Best move: Down /n");
+                    else if(move == MOVE_LEFT) // Si es cap a l'esquerra:
+                        printf("[INFO]Best move: Left /n");
+                    else // Si no trova cap moviment:
+                        printf("[INFO]Move no valid /n");
+                    break; // Surt del case
+                }
                 break;
             case QUIT_GAME:
                 printf("[INFO] QUIT GAME!\n");
