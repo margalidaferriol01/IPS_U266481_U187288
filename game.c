@@ -339,7 +339,7 @@ int recursive_best_score(Game *g, int depth) {
             }
         }
 
-        // Alliberam la memòria de la còpia del joc temporal abans de passar al següent moviment
+        // Alliberam la memòria de la còpia
         free_game(&temp_game);
     }
 
