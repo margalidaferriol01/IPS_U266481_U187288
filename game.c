@@ -294,28 +294,29 @@ Game copy(Game *g){
    És el "cervell" que va provant coses de manera recursiva fins a un límit. */
 int recursive_best_score(Game *g, int depth) {
     
-    // 1. CAS BASE: Ja hem guanyat?
+    // 1. CAS BASE: Ja hem guanyat o hem perdut?
     if (is_terminal(g->state)) {
         return g->score;
     }
 
-    // 2. CAS BASE: Límit de profunditat
+    // 2. CAS BASE: Hem arribat al límit de profunditat?
     if (depth >= MAX_DEPTH) {
         return 0; 
     }
 
+    // Inicialitzam la puntuació mínima a 0, que serà el valor que retornarem si no trobam cap moviment vàlid
     int min_score = 0;
 
-    // 3. BUCLE D'EXPLORACIÓ: Provam els 4 moviments
+    // 3. Bucle per provar cada moviment possible (Up, Right, Down, Left)
     for (int i = MOVE_UP; i <= MOVE_LEFT; i++) {
         
         // Feim la CÒPIA del joc per no espenyar la partida real
         Game temp_game = copy(g); 
 
-        // Aplicam el moviment a la còpia
+        // Aplicam el moviment a la còpia del joc temporal
         temp_game.state = move(temp_game.state, i);
         
-        // --- AQUÍ FEM LA COMPARACIÓ SENSE IS_EQUAL ---
+        // Comprovam si el moviment ha canviat l'estat del joc (si és vàlid)
         bool ha_canviat = false;
         for (int r = 0; r < g->state.rows; r++) {
             // Comparam cada fila del joc original amb la de la còpia
@@ -327,14 +328,14 @@ int recursive_best_score(Game *g, int depth) {
 
         // Si el moviment ha estat possible (l'estat és diferent)
         if (ha_canviat) {
-            temp_game.score++; // Comptam el pas donat
+            temp_game.score++; // Comptam un moviment més a la puntuació
 
             // Tornam a cridar la funció de manera recursiva per explorar més moviments a partir d'aquest nou estat
             int result = recursive_best_score(&temp_game, depth + 1);
 
             // Cercam el mínim: si result > 0 i millora el que teníem
             if (result > 0 && (min_score == 0 || result < min_score)) {
-                min_score = result;
+                min_score = result; // Actualitzam la millor puntuació trobada fins ara
             }
         }
 
@@ -345,8 +346,27 @@ int recursive_best_score(Game *g, int depth) {
     return min_score;
 }
 
-int show_best_move(Game *g){
-	return INVALID_MOVE;
+int show_best_move(Game *g){ // per trobar millor moviment 
+    int best_move = INVALID_MOVE; // Variable inici
+    int best_score= 0; // Comença per 0
+
+    for (int i = MOVE_UP; i<= MOVE_LEFT;i++){ // pusca per cada movment
+        Game temp_game = copy(g); // copia el joc, aixi no modifiquem el joc original.
+        State estat_abans =temp_game.state; // Guardem l'estat
+        temp_game.state =move (temp_game.state, i);// actualitza l'estat del moviment
+
+        if (!is_equal(estat_abans, temp_game.state)){ // si es troba una resulatat valid
+            temp_game.score++; //La puntuacio augmenta
+            int resultat =recursive_best_score(&temp_game,1); // i crida la funcio recursive que vam fer.
+
+            if(resultat >0&&(best_score == 0 || resultat < best_score)){ // Si el resultat es més gran que 0 i es miilor que abans
+                best_score= resultat; // actualirza best_score
+                best_move=i; // actualitza el millor moviment 
+            }
+        }
+        free_game(&temp_game);// hem reservar el joc al iniici i ara haurà d'alliberar
+    }
+	return best_move; // Retorna al millor moviment
 }
 /**** LAB 3 - functions to program (end here) ****/
 
