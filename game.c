@@ -294,28 +294,29 @@ Game copy(Game *g){
    És el "cervell" que va provant coses de manera recursiva fins a un límit. */
 int recursive_best_score(Game *g, int depth) {
     
-    // 1. CAS BASE: Ja hem guanyat?
+    // 1. CAS BASE: Ja hem guanyat o hem perdut?
     if (is_terminal(g->state)) {
         return g->score;
     }
 
-    // 2. CAS BASE: Límit de profunditat
+    // 2. CAS BASE: Hem arribat al límit de profunditat?
     if (depth >= MAX_DEPTH) {
         return 0; 
     }
 
+    // Inicialitzam la puntuació mínima a 0, que serà el valor que retornarem si no trobam cap moviment vàlid
     int min_score = 0;
 
-    // 3. BUCLE D'EXPLORACIÓ: Provam els 4 moviments
+    // 3. Bucle per provar cada moviment possible (Up, Right, Down, Left)
     for (int i = MOVE_UP; i <= MOVE_LEFT; i++) {
         
         // Feim la CÒPIA del joc per no espenyar la partida real
         Game temp_game = copy(g); 
 
-        // Aplicam el moviment a la còpia
+        // Aplicam el moviment a la còpia del joc temporal
         temp_game.state = move(temp_game.state, i);
         
-        // --- AQUÍ FEM LA COMPARACIÓ SENSE IS_EQUAL ---
+        // Comprovam si el moviment ha canviat l'estat del joc (si és vàlid)
         bool ha_canviat = false;
         for (int r = 0; r < g->state.rows; r++) {
             // Comparam cada fila del joc original amb la de la còpia
@@ -327,18 +328,18 @@ int recursive_best_score(Game *g, int depth) {
 
         // Si el moviment ha estat possible (l'estat és diferent)
         if (ha_canviat) {
-            temp_game.score++; // Comptam el pas donat
+            temp_game.score++; // Comptam un moviment més a la puntuació
 
             // Tornam a cridar la funció de manera recursiva per explorar més moviments a partir d'aquest nou estat
             int result = recursive_best_score(&temp_game, depth + 1);
 
             // Cercam el mínim: si result > 0 i millora el que teníem
             if (result > 0 && (min_score == 0 || result < min_score)) {
-                min_score = result;
+                min_score = result; // Actualitzam la millor puntuació trobada fins ara
             }
         }
 
-        // Alliberam la memòria de la còpia
+        // Alliberam la memòria de la còpia del joc temporal abans de passar al següent moviment
         free_game(&temp_game);
     }
 
