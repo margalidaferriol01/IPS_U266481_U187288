@@ -290,23 +290,6 @@ Game copy(Game *g){
     return g_copy;
 }
 
-bool is_equal(State s1, State s2) {
-    // 1. Si les dimensions són diferents, els estats no poden ser iguals
-    if (s1.rows != s2.rows || s1.columns != s2.columns) {
-        return false;
-    }
-
-    // 2. Comparam fila per fila el contingut del tauler
-    for (int i = 0; i < s1.rows; i++) {
-        // Fem servir strcmp per comparar les cadenes de caràcters de cada fila
-        if (strcmp(s1.grid[i], s2.grid[i]) != 0) {
-            return false; // Si una fila és diferent, ja no són iguals
-        }
-    }
-
-    return true; // Si hem arribat aquí, és que tot el tauler és idèntic
-}
-
 /* Aquesta funció cerca la millor puntuació possible explorant moviments futurs.
    És el "cervell" que va provant coses de manera recursiva fins a un límit. */
 int recursive_best_score(Game *g, int depth) {
@@ -331,8 +314,8 @@ int recursive_best_score(Game *g, int depth) {
 
         // Aplicam el moviment a la còpia
         temp_game.state = move(temp_game.state, i);
-
-        // --- Aqui feim comparació de l'estat abans i després del moviment ---
+        
+        // --- AQUÍ FEM LA COMPARACIÓ SENSE IS_EQUAL ---
         bool ha_canviat = false;
         for (int r = 0; r < g->state.rows; r++) {
             // Comparam cada fila del joc original amb la de la còpia
@@ -346,7 +329,7 @@ int recursive_best_score(Game *g, int depth) {
         if (ha_canviat) {
             temp_game.score++; // Comptam el pas donat
 
-            // Ens tornam a cridar
+            // Tornam a cridar la funció de manera recursiva per explorar més moviments a partir d'aquest nou estat
             int result = recursive_best_score(&temp_game, depth + 1);
 
             // Cercam el mínim: si result > 0 i millora el que teníem
@@ -355,7 +338,7 @@ int recursive_best_score(Game *g, int depth) {
             }
         }
 
-        // NETEJA: Alliberam la memòria de la còpia
+        // Alliberam la memòria de la còpia
         free_game(&temp_game);
     }
 
