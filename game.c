@@ -355,7 +355,14 @@ int show_best_move(Game *g){ // per trobar millor moviment
         State estat_abans =temp_game.state; // Guardem l'estat
         temp_game.state =move (temp_game.state, i);// actualitza l'estat del moviment
 
-        if (!is_equal(estat_abans, temp_game.state)){ // si es troba una resulatat valid
+        bool hiha_canvi = false; // aquest bool es per comprovar si hi ha canvol
+        for ( int r= 0; r<g -> state.rows; r++){//comprova la taula d'abans i de despreés
+            if (strcmp(estat_abans.grid[r],temp_game.state.grid[r])!=0){ // si la fila és diferent
+                hiha_canvi= true; // hi ha canvi, per tant retorna true
+                break; // surt de bucle for i deixa de comparar.
+            }
+        }
+        if (hiha_canvi){ // si hi ha canvi del moviment
             temp_game.score++; //La puntuacio augmenta
             int resultat =recursive_best_score(&temp_game,1); // i crida la funcio recursive que vam fer.
 
