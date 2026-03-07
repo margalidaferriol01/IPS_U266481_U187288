@@ -313,6 +313,8 @@ int recursive_best_score(Game *g, int depth) {
         // Feim la CÒPIA del joc per no espenyar la partida real
         Game temp_game = copy(g); 
 
+        State before = temp_game.state;
+
         // Aplicam el moviment a la còpia del joc temporal
         temp_game.state = move(temp_game.state, i);
         
@@ -334,7 +336,7 @@ int recursive_best_score(Game *g, int depth) {
             int result = recursive_best_score(&temp_game, depth + 1);
 
             // Cercam el mínim: si result > 0 i millora el que teníem
-            if (result > 0 && (min_score == 0 || result < min_score)) {
+            if (result >0 &&(min_score == 0 || result < min_score)) {
                 min_score = result; // Actualitzam la millor puntuació trobada fins ara
             }
         }
@@ -351,22 +353,26 @@ int show_best_move(Game *g){ // per trobar millor moviment
     int best_score= 0; // Comença per 0
 
     for (int i = MOVE_UP; i<= MOVE_LEFT;i++){ // pusca per cada movment
+
         Game temp_game = copy(g); // copia el joc, aixi no modifiquem el joc original.
-        State estat_abans =temp_game.state; // Guardem l'estat
+        State before = temp_game.state; // Guardem l'estat
         temp_game.state =move (temp_game.state, i);// actualitza l'estat del moviment
 
         bool hiha_canvi = false; // aquest bool es per comprovar si hi ha canvol
+       
         for ( int r= 0; r<g -> state.rows; r++){//comprova la taula d'abans i de despreés
-            if (strcmp(estat_abans.grid[r],temp_game.state.grid[r])!=0){ // si la fila és diferent
+            if (strcmp(g->state.grid[r], temp_game.state.grid[r]) != 0){ // si la fila és diferent
                 hiha_canvi= true; // hi ha canvi, per tant retorna true
                 break; // surt de bucle for i deixa de comparar.
             }
         }
+
         if (hiha_canvi){ // si hi ha canvi del moviment
             temp_game.score++; //La puntuacio augmenta
             int resultat =recursive_best_score(&temp_game,1); // i crida la funcio recursive que vam fer.
+            printf("move %d -> score %d\n", i, resultat);
 
-            if(resultat >0&&(best_score == 0 || resultat < best_score)){ // Si el resultat es més gran que 0 i es miilor que abans
+            if (best_score == 0 || resultat < best_score){ //Si el best_score es 0 o millor que resultat anterior
                 best_score= resultat; // actualirza best_score
                 best_move=i; // actualitza el millor moviment 
             }
@@ -376,5 +382,3 @@ int show_best_move(Game *g){ // per trobar millor moviment
 	return best_move; // Retorna al millor moviment
 }
 /**** LAB 3 - functions to program (end here) ****/
-
-
