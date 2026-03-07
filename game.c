@@ -347,19 +347,19 @@ int recursive_best_score(Game *g, int depth) {
 
     // 3. Bucle per provar cada moviment possible (Up, Right, Down, Left)
     for (int i = MOVE_UP; i <= MOVE_LEFT; i++) {
-        
-        // Feim la CÒPIA del joc per no espenyar la partida real
-        Game temp_game = copy(g); 
+
+        // Feim la còpia del joc per no espenyar la partida real
+        Game temp_game = copy(g);
 
         // Aplicam el moviment a la còpia del joc temporal
         temp_game.state = move(temp_game.state, i);
         
-        // Comprovam si el moviment ha canviat l'estat del joc (si és vàlid)
+        // Comprovam si el moviment ha canviat l'estat del joc (si no ha canviat, vol dir que el moviment no era vàlid i no el considerarem)
         bool ha_canviat = false;
         for (int r = 0; r < g->state.rows; r++) {
             // Comparam cada fila del joc original amb la de la còpia
             if (strcmp(g->state.grid[r], temp_game.state.grid[r]) != 0) {
-                ha_canviat = true; // Si una fila és diferent, és que ens hem mogut
+                ha_canviat = true; // Si una fila és diferent, és que mos hem mogut
                 break;
             }
         }
@@ -371,13 +371,13 @@ int recursive_best_score(Game *g, int depth) {
             // Tornam a cridar la funció de manera recursiva per explorar més moviments a partir d'aquest nou estat
             int result = recursive_best_score(&temp_game, depth + 1);
 
-            // Cercam el mínim: si result > 0 i millora el que teníem
+            // Cercam el mínim: si result > 0 i millora el que teníem:
             if (result >0 &&(min_score == 0 || result < min_score)) {
                 min_score = result; // Actualitzam la millor puntuació trobada fins ara
             }
         }
 
-        // Alliberam la memòria de la còpia
+        // Alliberam la memòria de la còpia del joc abans de passar al següent moviment
         free_game(&temp_game);
     }
 
@@ -418,8 +418,7 @@ int show_best_move(Game *g){ // per trobar millor moviment
 /**** LAB 3 - functions to program (end here) ****/
 
 /* MILLORES VISUALS:
-   - Implementació de codis de color ANSI per millorar la llegibilitat del tauler a la terminal.
-   - Feim servir emojis (🧱, 👷, 📦, 📍, ✅) per fer el joc més visual, atractiu i intuïtiu per al jugador.
+   - Feim un swithch per canviar les lletres pels emojis (🧱, 👷, 📦, 📍, ✅) per fer el joc més visual, atractiu i intuïtiu per al jugador.
    - Neteja automàtica de la pantalla (system clear) per oferir una experiència més fluida i evitar que el tauler es sobreescrigui a la terminal.
    - Bloqueig de pantalla amb pausa (getchar) en el menú "Show best move" per evitar que la informació desaparegui.(linies 39-42 de main.c)
 */
