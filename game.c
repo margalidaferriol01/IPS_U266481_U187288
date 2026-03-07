@@ -95,17 +95,55 @@ void choose_level(Game *game){
 
 
 /**** LAB 1 - functions to program (start here) ****/
-void print_state(State s){
-//Imprimeix l'estat del joc, el "grid" corresponent segons el nivell seleccionat pel jugador
-    for (int i = 0; i <s.rows; ++i) { //Recorre totes les files
-        for (int j = 0; j<s.columns; ++j) { //Recorre totes les columnes
-            printf("%c",s.grid[i][j]); //Imprimeix el caràcter guardat a la posició [i][j]
+/* Funció: print_state
+   Descripció: Imprimeix l'estat actual del tauler a la terminal. 
+   Com a extensió del projecte, s'han substituït els caràcters estàndard per emojis 
+   per millorar la interfície visual (UI).
+*/
+void print_state(State s) {
+    // Iniciem un bucle per recórrer cadascuna de les files de la graella del joc.
+    for (int i = 0; i < s.rows; ++i) {
+        
+        // Per a cada fila, recorrem totes les seves columnes
+        for (int j = 0; j < s.columns; ++j) {
+            
+            // Obtenim el caràcter emmagatzemat en la posició actual (fila i, columna j)
+            char c = s.grid[i][j]; 
+            
+            // Feim un switch per traduir cada caràcter intern en un element visual representat per un emoji o espai 
+            switch(c) {
+                case '#': 
+                    printf("🧱"); // Representació visual de les parets 
+                    break;       
+                case 'A': 
+                    printf("👷"); // Representació de l'agent sobre terra buit
+                    break;      
+                case 'Y': 
+                    printf("👷"); // Representació de l'agent quan està sobre un objectiu
+                    break;      
+                case 'B': 
+                    printf("📦"); // Representació visual de les caixes a moure
+                    break;        
+                case 'G': 
+                    printf("📍"); // Representació dels punts d'objectiu on han d'anar les caixes
+                    break;       
+                case 'X': 
+                    printf("✅"); // Caixa col·locada correctament a l'objectiu
+                    break;    
+                case '.': 
+                    // Imprimim dos espais en blanc per simular el terra buit. 
+                    // Feim servir dos espais per mantenir la proporció quadrada amb els emojis que ocupen més espai visual.
+                    printf("  "); 
+                    break;                  
             }
-        printf("\n"); //Passa a la següent línia al final de cada fila 
+        }
+        // Un cop acabada d'imprimir una fila, fem un salt de línia per passar a la següent
+        printf("\n"); 
     }
 }
 
 void print_game(Game game){
+    system("clear"); // Això neteja la pantalla abans de dibuixar el tauler nou i evita que es sobreescrigui.
     //Imprimeix el "level" i "score" guardats a l'estructura de dades "game"
     printf("[INFO] Level #%d current score:%d\n",game.level,game.score); 
     //Imprimeix la taula actual
@@ -313,8 +351,6 @@ int recursive_best_score(Game *g, int depth) {
         // Feim la CÒPIA del joc per no espenyar la partida real
         Game temp_game = copy(g); 
 
-        State before = temp_game.state;
-
         // Aplicam el moviment a la còpia del joc temporal
         temp_game.state = move(temp_game.state, i);
         
@@ -352,10 +388,9 @@ int show_best_move(Game *g){ // per trobar millor moviment
     int best_move = INVALID_MOVE; // Variable inici
     int best_score= 0; // Comença per 0
 
-    for (int i = MOVE_UP; i<= MOVE_LEFT;i++){ // pusca per cada movment
+    for (int i = MOVE_UP; i<= MOVE_LEFT;i++){ // Prova cada moviment possible (Up, Right, Down, Left)
 
         Game temp_game = copy(g); // copia el joc, aixi no modifiquem el joc original.
-        State before = temp_game.state; // Guardem l'estat
         temp_game.state =move (temp_game.state, i);// actualitza l'estat del moviment
 
         bool hiha_canvi = false; // aquest bool es per comprovar si hi ha canvol
@@ -381,3 +416,10 @@ int show_best_move(Game *g){ // per trobar millor moviment
 	return best_move; // Retorna al millor moviment
 }
 /**** LAB 3 - functions to program (end here) ****/
+
+/* MILLORES VISUALS:
+   - Implementació de codis de color ANSI per millorar la llegibilitat del tauler a la terminal.
+   - Feim servir emojis (🧱, 👷, 📦, 📍, ✅) per fer el joc més visual, atractiu i intuïtiu per al jugador.
+   - Neteja automàtica de la pantalla (system clear) per oferir una experiència més fluida i evitar que el tauler es sobreescrigui a la terminal.
+   - Bloqueig de pantalla amb pausa (getchar) en el menú "Show best move" per evitar que la informació desaparegui.(linies 39-42 de main.c)
+*/

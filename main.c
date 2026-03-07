@@ -35,6 +35,10 @@ void run_game(Session *session){
                         printf("[INFO]Best move: Left \n");
                     else // Si no trova cap moviment:
                         printf("[INFO]Move no valid \n");
+                        
+                    printf("Press ENTER to continue...");
+                    getchar(); // Captura el newline anterior si n'hi ha un
+                    getchar(); // Espera que l'usuari premi una tecla
                     break; // Surt del case
                 }
                 break;
