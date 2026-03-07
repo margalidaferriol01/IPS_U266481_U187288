@@ -370,7 +370,6 @@ int show_best_move(Game *g){ // per trobar millor moviment
         if (hiha_canvi){ // si hi ha canvi del moviment
             temp_game.score++; //La puntuacio augmenta
             int resultat =recursive_best_score(&temp_game,1); // i crida la funcio recursive que vam fer.
-            printf("move %d -> score %d\n", i, resultat);
 
             if (best_score == 0 || resultat < best_score){ //Si el best_score es 0 o millor que resultat anterior
                 best_score= resultat; // actualirza best_score

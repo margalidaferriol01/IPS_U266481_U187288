@@ -25,11 +25,11 @@ void run_game(Session *session){
                 {
                     int move= show_best_move(game); // Crida la funcio show_best_move
                     // Comprovem quin moviment ha retonat la funcio 
-                    if(move == MOVE_UP) // si es cap a mun:
+                    if(move == MOVE_UP) // si es cap amunt:
                         printf("[INFO]Best move: Up \n");
                     else if(move == MOVE_RIGHT) // si es cap a la dreta:
                         printf("[INFO]Best move: Right \n");
-                    else if(move == MOVE_DOWN) // Si es cap abaix:
+                    else  if(move == MOVE_DOWN) // Si es cap abaix:
                         printf("[INFO]Best move: Down \n");
                     else if(move == MOVE_LEFT) // Si es cap a l'esquerra:
                         printf("[INFO]Best move: Left \n");
