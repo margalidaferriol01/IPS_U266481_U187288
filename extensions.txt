@@ -1,0 +1,32 @@
+============================================================
+            EXTENSIÓ DEL PROJECTE - SOKOBAN (L3)
+============================================================
+
+Com a part de la 3a entrega del projecte Sokoban, hem implementat 
+les següents millores per optimitzar la Interfície d'Usuari i l'experiència de joc:
+
+1. REPRESENTACIÓ VISUAL AMB EMOJIS
+   S'ha realitzat una millora estètica substituint els caràcters 
+   ASCII per emojis (🧱, 👷, 📦, 📍, ✅) dins la funció print_state. 
+   Això permet una identificació molt més ràpida dels elements 
+   del tauler i una estètica més visual.
+
+2. REFRESC DE PANTALLA DINÀMIC
+   S'ha integrat la comanda system("clear") per evitar que el 
+   tauler es dupliqui a la terminal amb cada moviment. D'aquesta 
+   manera, el joc es manté fix en una única posició.
+
+3. GESTIÓ DE PAUSES PER A L'AJUDA (BEST MOVE)
+   Per garantir que el jugador pugui llegir el millor moviment 
+   calculat per la recursivitat abans que la pantalla s'esborri, 
+   s'ha afegit un control de pausa amb getchar(). Això resol 
+   el conflicte entre la neteja de pantalla i la visualització 
+   de dades de la opció 5.
+
+4. AJUST DE LA GEOMETRIA DEL TAULER
+   S'ha adaptat l'espaiat de la graella (usant dobles espais 
+   al caràcter '.') per compensar l'amplada dels emojis. Això 
+   garanteix que el tauler mantingui una proporció quadrada i 
+   llegible.
+
+x
